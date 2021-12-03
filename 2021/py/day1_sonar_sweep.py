@@ -1,10 +1,8 @@
 import helper_methods as hm
 
-
 def count_next_value_increases(data):
-	# validate if list, I guess? maybe later
+
 	count = [1 for n0, n1 in zip(data[:-1], data[1:]) if n1 > n0]
-	# print(len(count))
 
 	return sum(count)
 

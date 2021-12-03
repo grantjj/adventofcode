@@ -1,5 +1,8 @@
-https://adventofcode.com/
+https://adventofcode.com
 
-docker container run -it --rm --name=aoc -v C:\Users\jgrant\Documents\GitHub\adventofcode\:/workspace/adventofcode datateam_core:dev
+docker container run -dt --rm --name=aoc -v C:\Users\jgrant\Documents\GitHub\adventofcode\:/workspace/adventofcode python:3.9-bullseye
+docker exec -it aoc bash
 
-Day 1: https://adventofcode.com/2021/day/1
+python py/<py_script>.py --example
+
+2021: https://adventofcode.com/2021
