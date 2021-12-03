@@ -47,8 +47,15 @@ def part_2(data, example_flg):
 
 if __name__=="__main__":
 
-	puzzle_data_file, example_flg = hm.setup(__file__)
+	'''
+	Call this file using the following
+		python <path_to_file>  --example
+	or if you want to run for real soltuion
+		python <path_to_file>
+	'''
+
+	puzzle_data_file, input_args = hm.setup(__file__)
 	payload = hm.read_data(puzzle_data_file)
 
-	part_1(payload, example_flg)
-	part_2(payload, example_flg)
+	part_1(payload, input_args.example)
+	part_2(payload, input_args.example)

@@ -1,76 +1,84 @@
-
 import helper_methods as hm
+from functools import partial
 
-def calculate_final_position(course_commands, command_lookup, initial_position=None):
+class Submarine1:
 
-	if initial_position is None:
-		initial_position = [0, 0]
+	def __init__(self, initial_bearing=None):
 
-	sub_position = initial_position
-	for command in course_commands:
-		direction = command[0]
-		amplitude = int(command[1])
-		delta = [amplitude * c for c in  command_lookup[direction]]
-		# using a list in the list definition...sketchy
-		sub_position = [sub + delta for sub, delta in zip(sub_position, delta)]
+		if initial_bearing is None:
+			self.initial_bearing = [0, 0]
 
-	return sub_position
+		self.horizontal = self.initial_bearing[0]
+		self.depth = self.initial_bearing[1]
+
+	def up(self, magnitude):
+		self.depth -= magnitude
+
+	def down(self, magnitude):
+		self.depth += magnitude
+
+	def forward(self, magnitude):
+		self.horizontal += magnitude
+
+
+
+class Submarine2:
+
+	def __init__(self, initial_bearing=None):
+
+		if initial_bearing is None:
+			self.initial_bearing = [0, 0, 0]
+
+		self.horizontal = self.initial_bearing[0]
+		self.depth = self.initial_bearing[1]
+		self.aim = self.initial_bearing[2]
+
+	def up(self, magnitude):
+		self.aim -= magnitude
+
+	def down(self, magnitude):
+		self.aim += magnitude
+
+	def forward(self, magnitude):
+		self.depth += self.aim * magnitude
+		self.horizontal += magnitude
 
 
 if __name__=="__main__":
 
-	puzzle_data_file, example_flg = hm.setup(__file__)
+	'''
+	Call this file using the following
+		python <path_to_file> --part X --example
+	or if you want to run for real soltuion
+		python <path_to_file> --part X
+	'''
+
+	puzzle_data_file, input_args = hm.setup(__file__)
 	payload = hm.read_data(puzzle_data_file)
-	course_commands = [n.split() for n in payload.split('\n')]
-	command_lookup = {
-		'forward': [1, 0],
-		'down': [0, 1],
-		'up': [0, -1]
-	}
+	plotted_course = [n.split() for n in payload.split('\n')]
 
-	# Part 1
-	final_position = calculate_final_position(course_commands, command_lookup)
-	ans = final_position[0] * final_position[1]
+	if input_args.part == 1:
+		sub = Submarine1()
+		solution_key = [150, 1604850]
+	elif input_args.part == 2:
+		sub = Submarine2()
+		solution_key = [900, 1685186100]
 
-	print(f">>> PART 1: The product of the final depth and horizontal position is {ans}")
+	for bearing in plotted_course:
 
-	if example_flg:
-		assert ans == 150, "the example data should return 150"
-		print(">>> PART 1 PASS")
-	else:
-		assert ans == 1604850, "the puzzle data should return 1604850"
-		print(">>> PART 1 PASS")
+		direction = bearing[0]
+		magnitude = int(bearing[1])
 
-	# Part 2
-	# [horizontal, depth, aim] is now the definition, movemnt only happens on forward
-	# breaks our previous function though
-	command_lookup = {
-		'forward': [1, 1, 0],
-		'down': [0, 0, 1],
-		'up': [0, 0, -1]
-	}
+		sub_command = {
+			"up": partial(sub.up, magnitude),
+			"down": partial(sub.down, magnitude),
+			"forward": partial(sub.forward, magnitude)
+		}
 
-	sub_position = [0, 0, 0]
-	plotted_course = []
-	for command in course_commands:
-		direction = command[0]
-		amplitude = int(command[1])
-		if direction == 'down':
-			sub_position[2] += amplitude
-		elif direction == 'up':
-			sub_position[2] -= amplitude
-		elif direction == 'forward':
-			sub_position[0] += amplitude
-			sub_position[1] += amplitude * sub_position[2]
-		# print(sub_position)
+		sub_command[direction]()
 
-	ans = sub_position[0] * sub_position[1]
+	solution = sub.horizontal * sub.depth
 
-	print(f">>> PART 1: The product of the final depth and horizontal position is {ans}")
+	print(f">>> PART {input_args.part}: The product of the final depth and horizontal position is {solution}")
 
-	if example_flg:
-		assert ans == 900, "the example data should return 900"
-		print(">>> PART 1 PASS")
-	else:
-		assert ans == 1685186100, "the puzzle data should return 1685186100"
-		print(">>> PART 1 PASS")
+	hm.check_answer(solution, solution_key, input_args)
