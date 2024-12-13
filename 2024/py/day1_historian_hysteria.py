@@ -17,4 +17,5 @@ print(f"The total distance between lists is {total_distance}.")
 
 df_counts = df.join(df.value_counts("list2"), on="list1", how="left").fillna(0)
 df_counts['similarity_score'] = df_counts['count'] * df_counts['list1']
-print(sum(df_counts.similarity_score))
+total_similarity_score = int(sum(df_counts.similarity_score))
+print(f"The sum of similarity scores is {total_similarity_score}.")
