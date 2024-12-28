@@ -1,19 +1,24 @@
-import helpers
 import re
 
-data_file = helpers.get_data_file_name("memory") #, use_demo_set = True)
+import helpers
+
+data_file = helpers.get_data_file_name("memory")  # , use_demo_set = True)
 # print(helpers.parse_data_file(data_file, convert_to_int=False))
+
 
 def mul(x, y):
     return x * y
 
+
 def do():
     return True
+
 
 def dont():
     return False
 
-raw_data = ''
+
+raw_data = ""
 with open(data_file, "r") as s:
     for line in s.readlines():
         raw_data += line
@@ -31,11 +36,11 @@ print(valid_instructions)
 enabled = True
 total = 0
 for instruction in valid_instructions:
-    result = eval(instruction.replace("\'", ''))
-    if type(result) == bool:
+    result = eval(instruction.replace("'", ""))
+    if type(result) is bool:
         enabled = result
 
-    if enabled and type(result) == int:
-        total+=eval(instruction)
+    if enabled and type(result) is int:
+        total += eval(instruction)
 
 print(total)
