@@ -68,9 +68,12 @@ class Grid2D:
     def __repr__(self):
         xmin, xmax, ymin, ymax = self.boundaries
         r0 = "\n".join(
-            "".join(self.grid.get((x, y), " ") for x in range(xmin, xmax + 1))
-            for y in range(ymin, ymax + 1)
-        )
+            "".join(
+                self.grid.get((x, y), " ") 
+                for x in range(xmin, xmax + 1)
+                )
+                for y in range(ymin, ymax + 1)
+        ) + "\n"
         return r0
 
     def __iter__(self):
